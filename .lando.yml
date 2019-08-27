@@ -1,24 +1,11 @@
 name: lando-cron
 services:
-  appserver:
-    type: php:7.2
-    via: cli
+  worker:
+    type: compose
     build_as_root:
       - "mkdir -p /var/log/cron"
       - "touch /var/log/cron/timestamp.log"
       - "chmod -R a+rw /var/log/cron"
-  crontab:
-    type: compose
-    scanner: false
-    build_as_root:
-      - "mkdir -p /var/log/cron"
-      - "touch /var/log/cron/cron.log"
-      - "chmod -R a+rw /var/log/cron"
     services:
-      image: docker:stable
-      command: crond -f -d 0 -L /var/log/cron/cron.log
-      working_dir: "/app"
-      volumes:
-        - ".:/app"
-        - "/var/run/docker.sock:/var/run/docker.sock"
-        - "./crontab.txt:/etc/crontabs/root"
+      image: devwithlando/php:7.2-fpm
+      command: docker-php-entrypoint /usr/local/bin/php /app/runner.php >out 2>&1
