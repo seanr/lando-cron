@@ -1,0 +1,1 @@
+* * * * * docker exec -u 0 landocron_appserver_1 /usr/local/bin/php /app/timestamp.php >> /var/log/cron/timestamp.log 2>&1
